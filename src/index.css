@@ -9,8 +9,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.doc-btn{
+  background-color: #0692B4;
+  color:#fff;
+  font-weight: 600;
+  padding: 15px 40px;
+  border-radius: 10px;
+  transition: 0.3s all ease-in-out;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
+.doc-btn:hover{
+  background-color: #00A187;
+}
+
