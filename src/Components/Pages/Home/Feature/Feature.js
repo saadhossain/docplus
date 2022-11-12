@@ -30,7 +30,7 @@ const Feature = () => {
         }
     ]
     return (
-        <div className='w-11/12 mx-auto my-5 grid grid-cols-3 gap-20'>
+        <div className='w-11/12 mx-auto my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20'>
             {
                 featuresData.map(feature => <FeatureItems key={feature.id} feature={feature}></FeatureItems>)
             }
