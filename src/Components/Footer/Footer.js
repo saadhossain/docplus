@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import footerBg from '../../assests/img/footer.png'
 
 const Footer = () => {
     return (
-        <div className='w-10/12 mx-auto py-10 grid grid-cols-3 justify-between'>
+        <div className='w-10/12 mx-auto py-10 grid grid-cols-3 justify-between' style={{backgroundImage: `url(${footerBg})`}}>
             <div>
                 <h2 className='text-2xl my-2'>Services</h2>
                 <ul>
