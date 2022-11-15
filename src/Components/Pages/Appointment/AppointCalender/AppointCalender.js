@@ -1,9 +1,6 @@
-import { format } from 'date-fns';
-import React, { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import chair from '../../../../assests/img/chair.png';
-const AppointCalender = () => {
-    const [selectedDate, setSelectedDate] = useState(new Date())
+const AppointCalender = ({selectedDate, setSelectedDate}) => {
     return (
         <div className='w-11/12 mx-auto py-5'>
             <div className='flex flex-col-reverse lg:flex-row justify-center items-center gap-10'>
@@ -18,7 +15,6 @@ const AppointCalender = () => {
                     <img src={chair} alt='Hospital Chair' />
                 </div>
             </div>
-            <p>You Selected : <span className='font-bold'>{format(selectedDate, 'PP')}</span> for Appointment</p>
         </div>
     );
 };
