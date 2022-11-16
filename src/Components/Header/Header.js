@@ -23,10 +23,10 @@ const Header = () => {
                             {navItems}
                         </ul>
                     </div>
-                    <div className='lg:flex items-center hidden'>
-                    <img src={logo} alt='' className='w-10' />
-                    <h1 className='text-2xl font-bold text-doc'>Doc+</h1>
-                </div>
+                    <Link to='/' className='lg:flex items-center hidden'>
+                        <img src={logo} alt='' className='w-10' />
+                        <h1 className='text-2xl font-bold text-doc'>Doc+</h1>
+                    </Link>
                 </div>
                 <div className='flex items-center lg:hidden'>
                     <img src={logo} alt='' className='w-10' />

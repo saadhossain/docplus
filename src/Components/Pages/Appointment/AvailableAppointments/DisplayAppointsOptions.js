@@ -22,6 +22,7 @@ const DisplayAppointsOptions = ({ appointmentOption, setBookingDetails, bookingD
             phone
         }
         console.log(bookingDetails);
+        form.reset()
     }
     return (
         <div className='p-5 shadow-2xl rounded-xl flex flex-col gap-2'>
