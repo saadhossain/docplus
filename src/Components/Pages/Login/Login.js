@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider';
 
 const Login = () => {
     const {userLogin} = useContext(AuthContext)
     const { register, handleSubmit } = useForm();
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/dashboard'
+    const navigate = useNavigate()
     const onSubmit = data => {
         const email = data.email;
         const password = data.password;
@@ -14,8 +17,14 @@ const Login = () => {
         userLogin(email, password)
         .then((result) => {
             const user = result.user;
-            console.log(user);
-            toast.success('Login Successful...')
+            fetch(`http://localhost:5000/accesstoken?email=${user.email}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                localStorage.setItem('accessToken', data.accessToken)
+                toast.success('Login Successful...')
+                navigate(from, {replace: true})
+            })
         })
         .catch(err => console.error(err))
 

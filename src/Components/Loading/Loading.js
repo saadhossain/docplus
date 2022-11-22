@@ -5,8 +5,8 @@ const Loading = () => {
     const { loading } = useContext(AuthContext)
     if (loading) {
         return (
-            <div className='flex justify-center min-h-[60vh] items-center'>
-               <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin :border-primary"></div>
+            <div className='flex justify-center min-h-screen items-center'>
+               <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary"></div>
             </div>
         );
     }

@@ -1,18 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assests/doctor-log-64.png';
-import {AiOutlineLogout} from 'react-icons/ai'
 import { AuthContext } from '../../Context/AuthProvider';
-import toast from 'react-hot-toast';
 const Header = () => {
-    const {user, logOut} = useContext(AuthContext)
-    const handleLogOut = () => {
-        logOut()
-        .then(()=> {
-            toast.success('You are logged Out...')
-        })
-        .catch(err => console.error(err))
-    }
+    const {user} = useContext(AuthContext)
     const navItems = <>
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/about'>About</Link></li>
@@ -23,8 +14,9 @@ const Header = () => {
             user ?
             <>
             <li><Link to='/dashboard'>Dashboard</Link></li>
+            <Link to='/dashboard'>
             <img src={user?.photoURL ? user?.photoURL :'https://i.ibb.co/mzkVLJt/profile.png' } alt='user' className='w-10 h-10 rounded-full'/>
-            <li><Link><AiOutlineLogout onClick={handleLogOut} className='w-6 h-6 text-gray-900'></AiOutlineLogout></Link></li>
+            </Link>
             </>
             :<li><Link to='/login'>Login</Link></li>
         }

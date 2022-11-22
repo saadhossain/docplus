@@ -23,7 +23,7 @@ const BookingModal = ({ availableTreatment, selectedDate , setAvailableTreatment
             patientName,
             email,
             phone,
-            bookedOn: new Date()
+            bookedOn: format(new Date(), 'PP')
         }
         console.log(appointmentInfo);
         //Send data to the mongodb
