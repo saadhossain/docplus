@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider';
 
 const Login = () => {
-    const {userLogin} = useContext(AuthContext)
+    const { userLogin } = useContext(AuthContext)
     const { register, handleSubmit } = useForm();
     const location = useLocation()
     const from = location.state?.from?.pathname || '/dashboard'
@@ -15,18 +15,29 @@ const Login = () => {
         const password = data.password;
         //Create a user using email and password
         userLogin(email, password)
-        .then((result) => {
-            const user = result.user;
-            fetch(`http://localhost:5000/accesstoken?email=${user.email}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                localStorage.setItem('accessToken', data.accessToken)
-                toast.success('Login Successful...')
-                navigate(from, {replace: true})
+            .then((result) => {
+                const user = result.user;
+                const currentUser = {
+                    email: user.email
+                }
+                fetch('http://localhost:5000/accesstoken', {
+                    method: 'post',
+                    headers:{
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(currentUser)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        if (data.accessToken) {
+                            localStorage.setItem('accessToken', data.accessToken)
+                            toast.success('Login Successful...')
+                            navigate(from, { replace: true })
+                        }
+                    })
             })
-        })
-        .catch(err => console.error(err))
+            .catch(err => console.error(err))
 
     };
 

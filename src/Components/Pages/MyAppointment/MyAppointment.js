@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../../../Context/AuthProvider';
 
 const MyAppointment = () => {
-    const { user } = useContext(AuthContext)
+    const { user, logOut } = useContext(AuthContext)
     // const [appointments, setAppointments] = useState([])
     // console.log(appointments);
     // useEffect(() => {
@@ -14,13 +14,24 @@ const MyAppointment = () => {
 
     //Using tanstacQuery
     const {data:appointments = []} = useQuery({
-        queryKey: ['appointments', user?.email],
-        queryFn: () => fetch(`http://localhost:5000/appointments?email=${user?.email}`)
-        .then(res => res.json())
+        queryKey: ['appointments', user?.email, logOut],
+        queryFn: () => fetch(`http://localhost:5000/appointments?email=${user?.email}`, {
+            headers: {
+                authorization: `Beareer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        .then(res => {
+            if(res.status === 401 || res.status === 403){
+                return logOut()
+            }
+            return res.json()
+        })
     })
     return (
         <div>
-            <div className="overflow-x-auto">
+            {
+                appointments.length ?
+                <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
                         <tr>
@@ -29,21 +40,28 @@ const MyAppointment = () => {
                             <th>Treatment Name</th>
                             <th>Booked Schedule</th>
                             <th>Booking Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            appointments.map((appointment, i) => <tr key={i}>
+                            appointments?.map((appointment, i) => <tr key={i}>
                                 <th>{i+1}</th>
                                 <td className='font-semibold'>{appointment.treatmentName}</td>
                                 <td>{appointment.apptDate}</td>
                                 <td>{appointment.schedule}</td>
                                 <td>{appointment.bookedOn}</td>
+                                <button className='bg-primary py-1 px-2 rounded font-semibold text-white mt-3'>Cancel</button>
                             </tr>)
                         }
                     </tbody>
                 </table>
             </div>
+            : 
+            <div>
+                <h1 className='text-4xl font-semibold mt-5 bg-primary text-white py-5 px-10 rounded-xl text-center'>You have No Appointments</h1>
+            </div>
+            }
         </div>
     );
 };

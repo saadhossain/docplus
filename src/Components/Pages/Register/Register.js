@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider';
 
 const Register = () => {
     const { createuser, userProfile } = useContext(AuthContext);
     const { register, handleSubmit } = useForm();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/dashboard'
     const onSubmit = data => {
         //Get other forms value;
         const name = data.fullName;
@@ -25,19 +28,50 @@ const Register = () => {
             .then(res => res.json())
             .then(data => {
                 //Create a user using email and password
+                const userImage = data.data.url;
                 createuser(email, password)
                     .then((result) => {
                         const user = result.user;
-                        console.log(user);
+                        const currentUser = {
+                            email: user.email
+                        }
                         toast.success('Account Registration Successful...')
                         userProfile(name, data.data.url)
-                            .then(() => { })
+                            .then(() => {
+                                const userData = { name, email, userImage}
+                                saveUser(userData)
+                                //get Access token from the server
+                                fetch('http://localhost:5000/accesstoken', {
+                                    method: 'POST',
+                                    headers: {
+                                        'content-type': 'application/json'
+                                    },
+                                    body:JSON.stringify(currentUser)
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if(data.accessToken){
+                                        localStorage.setItem('accessToken', data.accessToken)
+                                    }
+                                })
+                                navigate(from, {replace: true})
+                            })
                             .catch(err => console.error(err))
                     })
                     .catch(err => console.error(err))
             })
             .catch(err => console.error(err))
     };
+    const saveUser = (userData) => {
+        console.log(userData);
+        fetch('http://localhost:5000/users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+    }
 
     return (
         <div className='w-96 mx-auto bg-gray-800 text-white py-5 px-10 rounded-lg'>
