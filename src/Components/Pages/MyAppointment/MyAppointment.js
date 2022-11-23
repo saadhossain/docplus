@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../../../Context/AuthProvider';
 
 const MyAppointment = () => {
@@ -13,7 +14,7 @@ const MyAppointment = () => {
     // }, [user?.email])
 
     //Using tanstacQuery
-    const {data:appointments = []} = useQuery({
+    const {data:appointments = [], refetch} = useQuery({
         queryKey: ['appointments', user?.email, logOut],
         queryFn: () => fetch(`http://localhost:5000/appointments?email=${user?.email}`, {
             headers: {
@@ -27,6 +28,19 @@ const MyAppointment = () => {
             return res.json()
         })
     })
+    //Handle cancel appointment
+    const handleCancelAppt = (id) => {
+        fetch(`http://localhost:5000/appointments/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.acknowledged){
+                toast.error('Appointment Cancelled...')
+                refetch()
+            }
+        })
+    }
     return (
         <div>
             {
@@ -51,7 +65,7 @@ const MyAppointment = () => {
                                 <td>{appointment.apptDate}</td>
                                 <td>{appointment.schedule}</td>
                                 <td>{appointment.bookedOn}</td>
-                                <button className='bg-primary py-1 px-2 rounded font-semibold text-white mt-3'>Cancel</button>
+                                <button onClick={() => handleCancelAppt(appointment._id)} className='bg-primary py-1 px-2 rounded font-semibold text-white mt-3'>Cancel</button>
                             </tr>)
                         }
                     </tbody>
